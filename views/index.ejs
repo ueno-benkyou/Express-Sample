@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja" ng-app="app">
+<head>
+	<title>ExpressSample</title>
+	<%- include('_head', {head: {name: 'ExpressSample', expname: 'ExpressSample'}}) %>
+	<script type="text/javascript">
+		/**
+		 *
+		 */
+		window.onload = function(){
+                        
+                };
+                
+	</script>
+</head>
+<body>
+        <main role="main" class="container">
+		<%- include('_body_menu', {menu: {title: 'ExpressSample'}}) %>     
+		<h2>概要</h2>
+		node.js + expressの構成で構築したwebアプリケーションのサンプルです。<br>
+		<hr>
+		<h3>主な機能</h3>
+		・UI-Gridによるソート機能、フィルター機能などを活用した直感的なデータ分析<br>
+		・Chart.jsによる各種グラフ出力<br>
+		・JasperReportsを用いた帳票出力機能<br>
+		<hr>
+		<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse" aria-expanded="false" aria-controls="collapse">基本構成</button>
+		<div class="collapse" id="collapse">
+			<div class="row row-offcanvas row-offcanvas-right">
+				<div class="col-12">
+					<table class="table table-striped">
+						<tr>
+							<th>アプリケーション</th>
+							<th>説明</th>
+							<th>構築時のバージョン</th>
+						</tr>
+						<tr>
+							<td>Node.js</td>
+							<td>サーバーサイドJavaScript</td>
+							<td>v9.2.1</td>
+						</tr>
+						<tr>
+							<td>express</td>
+							<td>Node.jsのMVCフレームワーク</td>
+							<td>v4.16.2</td>
+						</tr>
+						
+					</table>			
+				</div><!--/span-->
+			</div><!--/row-->
+		</div>
+        </main><!--/.container-->           
+</body>
+</html>

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="preview_ooo_genpin" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="19473a5b-c72a-4544-b07f-8098380605c5">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="479"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="521"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="genpin" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="genpin"/>
+	</field>
+	<field name="tonyuday" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="tonyuday"/>
+	</field>
+	<field name="honsu" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="honsu"/>
+	</field>
+	<field name="shiage_bi" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="shiage_bi"/>
+	</field>
+	<field name="syukka_bi" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="syukka_bi"/>
+	</field>
+	<field name="kanri_no" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="kanri_no"/>
+	</field>
+	<field name="renban" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="renban"/>
+	</field>
+	<field name="chu_renban" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="chu_renban"/>
+	</field>
+	<field name="juchu_saki_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="juchu_saki_name"/>
+	</field>
+	<field name="tantosya" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="tantosya"/>
+	</field>
+	<field name="chubang" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="chubang"/>
+	</field>
+	<field name="koji_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="koji_name"/>
+	</field>
+	<field name="status" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="status"/>
+	</field>
+	<field name="delivery_time" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="delivery_time"/>
+	</field>
+	<field name="katabn" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="katabn"/>
+	</field>
+	<field name="kosakfig" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="kosakfig"/>
+	</field>
+	<field name="ks" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ks"/>
+	</field>
+	<field name="setusnpvalu" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="setusnpvalu"/>
+	</field>
+	<field name="bar_hosei" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bar_hosei"/>
+	</field>
+	<field name="iro" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="iro"/>
+	</field>
+	<field name="kotei1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="kotei1"/>
+	</field>
+	<field name="kotei2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="kotei2"/>
+	</field>
+	<field name="kotei3" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="kotei3"/>
+	</field>
+	<field name="kotei4" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="kotei4"/>
+	</field>
+	<field name="kotei5" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="kotei5"/>
+	</field>
+	<field name="n01" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n01"/>
+	</field>
+	<field name="v01" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v01"/>
+	</field>
+	<field name="n02" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n02"/>
+	</field>
+	<field name="v02" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v02"/>
+	</field>
+	<field name="n03" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n03"/>
+	</field>
+	<field name="v03" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v03"/>
+	</field>
+	<field name="n04" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n04"/>
+	</field>
+	<field name="v04" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v04"/>
+	</field>
+	<field name="n05" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n05"/>
+	</field>
+	<field name="v05" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v05"/>
+	</field>
+	<field name="n06" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n06"/>
+	</field>
+	<field name="v06" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v06"/>
+	</field>
+	<field name="n07" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n07"/>
+	</field>
+	<field name="v07" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v07"/>
+	</field>
+	<field name="n08" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n08"/>
+	</field>
+	<field name="v08" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v08"/>
+	</field>
+	<field name="n09" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n09"/>
+	</field>
+	<field name="v09" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v09"/>
+	</field>
+	<field name="n10" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n10"/>
+	</field>
+	<field name="v10" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v10"/>
+	</field>
+	<field name="n11" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n11"/>
+	</field>
+	<field name="v11" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v11"/>
+	</field>
+	<field name="n12" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n12"/>
+	</field>
+	<field name="v12" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v12"/>
+	</field>
+	<field name="n13" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n13"/>
+	</field>
+	<field name="v13" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v13"/>
+	</field>
+	<field name="n14" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n14"/>
+	</field>
+	<field name="v14" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v14"/>
+	</field>
+	<field name="n15" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n15"/>
+	</field>
+	<field name="v15" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v15"/>
+	</field>
+	<field name="n16" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n16"/>
+	</field>
+	<field name="v16" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v16"/>
+	</field>
+	<field name="n17" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n17"/>
+	</field>
+	<field name="v17" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v17"/>
+	</field>
+	<field name="n18" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n18"/>
+	</field>
+	<field name="v18" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v18"/>
+	</field>
+	<field name="n19" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n19"/>
+	</field>
+	<field name="v19" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v19"/>
+	</field>
+	<field name="n20" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="n20"/>
+	</field>
+	<field name="v20" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="v20"/>
+	</field>
+	<field name="biko1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="biko1"/>
+	</field>
+	<field name="biko2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="biko2"/>
+	</field>
+	<field name="biko3" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="biko3"/>
+	</field>
+	<field name="biko4" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="biko4"/>
+	</field>
+	<field name="created_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="created_time"/>
+	</field>
+	<field name="update_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="update_time"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="94" splitType="Stretch">
+			<staticText>
+				<reportElement x="-10" y="11" width="151" height="24" uuid="32d83998-7e79-4c94-a5df-1d238a4e6791"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="ipaexg" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[jasper_sample]]></text>
+			</staticText>
+			<line>
+				<reportElement x="220" y="60" width="221" height="5" uuid="1df822cd-c741-4c42-843b-5df95ccc4580"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

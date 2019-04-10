@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja" ng-app="app">
+<head>
+	<title>チャートサンプル</title>
+	<%- include('_head', {head: {name: 'chart', expname: 'ExpressSample'}}) %>
+
+	<!--ライブラリ読み込み -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+	<script type="text/javascript">
+		/**
+		 *
+		 */
+		window.onload = function(){
+			var sql = 'SELECT c.name, COUNT(fc.category_id) as count '
+					+ 'FROM category c '
+					+	'INNER JOIN film_category fc '
+					+	'ON c.category_id = fc.category_id '
+					+ 'GROUP BY c.name, fc.category_id '
+					+ 'ORDER BY fc.category_id';
+			pg_query({
+				name: 'pg_chart_result',
+				sql: sql
+			});
+		};
+
+		socket.on('pg_chart_result', function(message) {
+			var data = JSON.parse(message);
+			console.log(data);
+			
+			// chartData
+			var chartData = {};
+			var labels = [];
+			var ds = [];
+			var color = [];
+			for(var i = 0; i < data.length; i++){
+				labels.push(data[i].name);
+				ds.push(parseInt(data[i].count));
+				color.push('#FF4444');
+			}
+			chartData = {
+				labels: labels,
+				datasets: [{
+					data: ds,
+					backgroundColor: color
+				}]
+			}
+			console.log(chartData);
+			// chartOption
+			var chartOption = {
+					responsive: true,                  //グラフ自動設定
+					legend: {                          //凡例設定
+						display: false                 //表示設定
+					},
+					title: {                           //タイトル設定
+						display: true,                 //表示設定
+						fontSize: 18,                  //フォントサイズ
+						text: 'カテゴリ別フィルム数グラフサンプル'                //ラベル
+					},
+					scales: {                          //軸設定
+						yAxes: [{                      //y軸設定
+							display: true,             //表示設定
+							scaleLabel: {              //軸ラベル設定
+							display: true,          //表示設定
+							labelString: '本数',  //ラベル
+							fontSize: 18               //フォントサイズ
+							},
+							ticks: {                      //最大値最小値設定
+								min: 0,                   //最小値
+								max: 100,                  //最大値
+								fontSize: 18,             //フォントサイズ
+								stepSize: 5               //軸間隔
+							},
+						}],
+						xAxes: [{                         //x軸設定
+							display: true,                //表示設定
+							barPercentage: 0.4,           //棒グラフ幅
+							categoryPercentage: 0.4,      //棒グラフ幅
+							scaleLabel: {                 //軸ラベル設定
+							display: true,             //表示設定
+							labelString: 'カテゴリ',  //ラベル
+							fontSize: 18               //フォントサイズ
+							},
+							ticks: {
+								fontSize: 18             //フォントサイズ
+							},
+						}],
+					},
+					layout: {                             //レイアウト
+						padding: {                          //余白設定
+							left: 100,
+							right: 50,
+							top: 0,
+							bottom: 0
+						}
+					}	
+			}
+
+			var ctx = document.getElementById('flow_canvas').getContext('2d');
+			var chart = new Chart(ctx, {
+						type: 'bar',
+						data: chartData,
+						options: chartOption
+			});
+			
+		});
+
+                
+	</script>
+</head>
+<body>
+	<main role="main" class="container">
+		<%- include('_body_menu', {menu: {title: 'チャートサンプル'}}) %>    
+		  
+		<div ng-controller="UIGridCtrl">
+			<!--描画箇所 -->
+            <canvas id="flow_canvas" height="90%"></canvas>
+		</div>
+	</main><!--/.container-->
+</body>
+</html>

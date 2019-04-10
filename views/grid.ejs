@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja" ng-app="app">
+<head>
+	<title>グリッドサンプル</title>
+	<%- include('_head', {head: {name: 'grid', expname: 'ExpressSample'}}) %>
+
+	<script type="text/javascript">
+		/**
+		 *
+		 */
+		window.onload = function(){
+			// テーブル一覧取得
+			pg_query({
+				name: 'pg_table_result',
+				sql: 'SELECT '
+				+		'relname as TABLE_NAME '
+				+	'FROM '
+				+		'pg_stat_user_tables '
+				+	'ORDER BY relname'
+			});
+
+		};
+		/**
+		 * テーブル一覧取得
+		 */
+		socket.on('pg_table_result', function(message) {
+			var data = JSON.parse(message);
+			var tableDropdown = document.getElementById('tableDropdown');                        
+			for(var i = 0; i < data.length; i++){
+				// セレクトオプション追加
+				var option = document.createElement('option');
+				option.setAttribute('value', data[i].table_name);
+				option.innerHTML = data[i].table_name;
+				tableDropdown.appendChild(option);
+			}
+			// COLUMN_DEFSを自動追加
+			pg_query({
+				name: 'pg_column_result',
+				sql: 'SELECT '
+				+   'information_schema.columns.column_name, '
+				+   'information_schema.columns.data_type,'
+				+        '(select description from pg_description where '
+				+        'pg_description.objoid=pg_stat_user_tables.relid and '
+				+        'pg_description.objsubid=information_schema.columns.ordinal_position)'
+				+ 'From '
+				+        'pg_stat_user_tables, '
+				+        'information_schema.columns '
+				+ 'WHERE '
+				+        'pg_stat_user_tables.relname=\'' + data[0].table_name + '\' '
+				+        'and pg_stat_user_tables.relname=information_schema.columns.table_name'
+			});
+			var sql = 'SELECT * FROM ' + data[0].table_name;
+			pg_query({
+				name: 'pg_result',
+				sql: sql
+			});
+		});
+
+		// テーブル選択のドロップダウンを指定したら、表示するテーブルを変更する
+		function chgTable(){
+			// COLUMN_DEFSを自動追加
+			pg_query({
+				name: 'pg_column_result',
+				sql: 'SELECT '
+				+   'information_schema.columns.column_name, '
+				+   'information_schema.columns.data_type,'
+				+        '(select description from pg_description where '
+				+        'pg_description.objoid=pg_stat_user_tables.relid and '
+				+        'pg_description.objsubid=information_schema.columns.ordinal_position)'
+				+ 'From '
+				+        'pg_stat_user_tables, '
+				+        'information_schema.columns '
+				+ 'WHERE '
+				+        'pg_stat_user_tables.relname=\'' + document.getElementById('tableDropdown').value + '\' '
+				+        'and pg_stat_user_tables.relname=information_schema.columns.table_name'
+			});
+			var sql = 'SELECT * FROM ' + document.getElementById('tableDropdown').value;
+			angular.element('[ng-controller=UIGridCtrl]').scope().table = document.getElementById('tableDropdown').value;
+			pg_query({
+				name: 'pg_result',
+				sql: sql
+			});
+		}
+
+                
+	</script>
+</head>
+<body>
+	<main role="main" class="container">
+		<%- include('_body_menu', {menu: {title: 'グリッドサンプル'}}) %>    
+		<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse" aria-expanded="false" aria-controls="collapse">概要</button>
+		<div class="collapse" id="collapse">
+			<div class="row row-offcanvas row-offcanvas-right">
+				<div class="col-12">
+					UI-grid及びpostgresの活用サンプル<br>
+					サンプルデータベースとして、POSTGRES TUTORIALのdvdrentalを使用している<br>
+					<a href="http://www.postgresqltutorial.com/postgresql-sample-database/" target="_blank">HPはこちら</a><br>
+					<hr>
+				</div><!--/span-->
+			</div><!--/row-->
+		</div>   
+		<div ng-controller="UIGridCtrl">
+			テーブル設定 <select id="tableDropdown" onchange="chgTable();"></select>
+			<button id="footerButton" class="btn btn-success" ng-click="toggleFooter()">グリッドフッターの切り替え</button>
+			<button class="btn btn-success" ng-click="toggleColumnFooter()">カラムフッターの切り替え</button>
+			<button class="btn btn-success" ng-click="toggleColumnFiltering()">フィルタリングの切り替え</button>
+			グリッド言語設定 <select id="langDropdown" ng-model="lang" ng-options="l for l in {{langs}}"></select>
+			<br />
+			<div ui-i18n="{{lang}}">
+				<div id="grid1" ui-grid="gridOptions" ui-grid-cellNav ui-grid-auto-resize ui-grid-resize-columns ui-grid-pinning ui-grid-edit ui-grid-selection ui-grid-move-columns ui-grid-exporter ui-grid-grouping ui-grid-save-state class="grid"></div>
+				<button type="button" class="btn btn-success" ng-click="saveState();">状態の保存</button>
+				<button type="button" class="btn btn-success" ng-click="restoreState();">状態の復元</button>
+				<button type="button" class="btn btn-success" ng-click="resetState();">状態の初期化</button>
+				
+				---呼出
+				<button type="button" class="btn btn-info" ng-click="restoreState1();">1</button>
+				<button type="button" class="btn btn-warning" ng-click="restoreState2();">2</button>
+				<button type="button" class="btn btn-danger" ng-click="restoreState3();">3</button>
+				
+				---保存
+				<button type="button" class="btn btn-info" ng-click="saveState1();">1</button>
+				<button type="button" class="btn btn-warning" ng-click="saveState2();">2</button>
+				<button type="button" class="btn btn-danger" ng-click="saveState3();">3</button>
+			</div>
+		</div>
+	</main><!--/.container-->
+</body>
+</html>

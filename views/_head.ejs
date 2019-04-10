@@ -1,0 +1,613 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<!-- jQuery -->
+<script type="text/javascript" src="/js/jquery/jquery-3.2.1.min.js"></script>
+
+<!-- jQuery UI -->
+<link type="text/css" rel="stylesheet" href="/js/jquery-ui/jquery-ui.min.css" />
+<script type="text/javascript" src="/js/jquery-ui/jquery-ui.min.js"></script>
+<!-- 国際化対応のライブラリをインポート -->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/i18n/jquery-ui-i18n.min.js"></script>
+
+<!-- Bootstrap -->
+<link type="text/css" rel="stylesheet" href="/js/bootstrap/css/bootstrap.min.css" />
+<style type="text/css">
+	.container {
+			max-width: 100%;
+			padding-top: 60px;
+	}
+</style>
+<script type="text/javascript" src="/js/popper.js/umd/popper.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- SheetJS js-xlsx library -->
+<script type="text/javascript" src="/js/js-xlsx/shim.js"></script>
+<script type="text/javascript" src="/js/js-xlsx/dist/xlsx.full.min.js"></script>
+
+<!-- SheetJS Service -->
+<script type="text/javascript" src="/js/js-xlsx/demos/angular/SheetJS-angular.js"></script>
+
+<!-- AMGULARJS -->
+<script src="/js/angular/angular.js"></script>
+<script src="/js/angular/angular-touch.js"></script>
+<script src="/js/angular/angular-animate.js"></script>
+
+<!-- UI Grid -->
+<link type="text/css" rel="stylesheet" href="/js/ui-grid/release/ui-grid.min.css" />
+<link type="text/css" rel="stylesheet" href="/js/ui-grid/release/ui-grid-sky.min.css" />
+<style type="text/css">
+	.grid .ui-grid-header-cell {
+		height: 170px;
+		max-height: 170px;
+	}
+	
+	.grid {
+		width: 100%;
+		height: calc(100vh - 100px - 42px - 42px);
+	}
+
+</style>
+<script type="text/javascript" src="/js/ui-grid/release/ui-grid.js"></script>
+
+<!-- pdfmake -->
+<script type="text/javascript" src="/js/pdfmake/build/pdfmake.min.js"></script>
+<script type="text/javascript" src="/js/pdfmake/build/vfs_fonts.js"></script>
+
+<!-- Socket.IO -->
+<script src="/socket.io/socket.io.js"></script>
+
+<!-- Moment.js -->
+<script type="text/javascript" src="/js/moment/min/moment-with-locales.min.js"></script>
+
+<script type="text/javascript">
+	var COLUMN_DEFS = {};
+		
+	var uigrid_onece = true;
+	var uigrid_init_state;
+	/* 
+	* モジュールの作成
+	* module(name [,requires [,config]])
+	* name : モジュール名(String)
+	* requires : 依存先のモジュール(配列)
+	* config : 構成の定義(関数)
+	*/ 
+	var app = angular.module('app', ['ngAnimate', 'ngTouch', 'ui.grid', 'ui.grid.cellNav', 'ui.grid.autoResize', 'ui.grid.resizeColumns', 'ui.grid.pinning', 'ui.grid.edit', 'ui.grid.selection', 'ui.grid.moveColumns', 'ui.grid.exporter', 'ui.grid.grouping', 'ui.grid.saveState']);
+    
+	/* Inject SheetJSExportService */
+	app.factory('SheetJSExportService', SheetJSExportService);
+	SheetJSExportService.inject = ['uiGridExporterService'];
+		
+	/*
+	* モジュールの設定
+	* controller(name, controller)
+	* name : コントローラ名(String)
+	* controller : コントローラのコンストラクタ(関数)
+	*/
+	app.controller('UIGridCtrl',  ['$scope', 'i18nService', '$http', '$timeout', '$interval', 'uiGridConstants', 'uiGridGroupingConstants', 'SheetJSExportService',
+        function ($scope, i18nService, $http, $timeout, $interval, uiGridConstants, uiGridGroupingConstants, SheetJSExportService) {
+			var gridApi;
+			$scope.langs = i18nService.getAllLangs(); // 国際化ライブラリの言語取得
+			$scope.lang = 'ja'; // グリッド宣言部で使用する言語を指定 <div ui-i18n="{{lang}}">
+
+			$scope.myColumnDefs = [];
+			$scope.myData = [];
+
+			$scope.table = '';
+			
+			$UIGridColumnDefs = [];
+            $scope.gridOptions = {
+				// http://ui-grid.info/docs/#!/api　参照
+				columnDefs: $scope.myColumnDefs,
+				data: 'myData',
+				enableFiltering: true,			
+				showGridFooter: true,
+				showColumnFooter: true,
+				
+				enableCellEditOnFocus: false,
+				enableColumnMenus: true,
+				enableColumnMoving: true,
+				enableColumnResizing: true,
+				enableExpandAll: true,
+				enableGridMenu: true,
+				enableGrouping: true,
+				enableImporter: false,
+				enableMinHeightCheck: true,
+				enablePinning: true,
+				enableRowHashing: true,
+				enableSorting: true,
+				enableVerticalScrollbar: 1,
+				enableHorizontalScrollbar: 1,
+				
+				enableSelectAll: true,
+				enableRowSelection: false,
+				enableFullRowSelection: true,
+				enableGroupHeaderSelection: true,
+				enableRowHeaderSelection: true,
+				enableFooterTotalSelected: true,
+				enableSelectionBatchEvent: false,
+				
+				exporterMenuAllData: true,
+				exporterMenuItemOrder: 200,
+				exporterMenuLabel: 'Export',
+				
+				exporterMenuSelectedData: true,
+				exporterMenuVisibleData: true,
+				
+				exporterMenuCsv: true,
+				exporterCsvColumnSeparator: ',',
+				exporterCsvFilename: '<%= head.expname %>.csv',
+				exporterHeaderFilterUseName: false,
+				exporterIsExcelCompatible: false,
+				exporterOlderExcelCompatibility: true,
+				
+				exporterMenuPdf: true,
+				exporterPdfDefaultStyle: {font: 'GenShin', fontSize: 11},
+				exporterPdfFilename: '<%= head.expname %>.pdf',
+				exporterPdfFooter: null,
+				exporterPdfHeader: null,
+				exporterPdfMaxGridWidth: 720,
+				exporterPdfOrientation: 'landscape',
+				exporterPdfPageSize: 'A4',
+				exporterPdfTableHeaderStyle: {bold: true, fontSize: 12, color: 'black'},
+				exporterPdfTableStyle: {margin: Array(4)},
+				
+				exporterSuppressColumns: [],
+				exporterSuppressMenu: true,
+				
+				saveWidths: true,
+				saveOrder: true,
+				saveScroll: true,
+				saveFocus: true,
+				saveVisible: true,
+				saveSort: true,
+				saveFilter: true,
+				savePinning: true,
+				saveGrouping: true,
+				saveGroupingExpandedStates: true,
+				saveTreeView: true,
+				saveSelection: true,
+				
+				showGridFooter: true,
+				showColumnFooter: true,
+				fastWatch: true,
+				rowIdentity: getRowId,
+				getRowIdentity: getRowId,
+				importerDataAddCallback: function importerDataAddCallback(grid, newObjects) {
+						$scope.gridOptions.data = $scope.data.concat(newObjects);
+				},
+				onRegisterApi: function onRegisterApi(registeredApi) {
+						gridApi = registeredApi;
+						switch('<%= head.name %>') {
+								// 特定の画面でマルチセレクトをfalseに設定するサンプル
+								case 'grid':
+										gridApi.selection.setMultiSelect(false);
+										break;
+						}
+						
+						if(window.rowSelectionChanged) {
+								gridApi.selection.on.rowSelectionChanged($scope, function(row){
+										window.rowSelectionChanged(row);
+								});
+						}
+						gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
+								if(newValue !== oldValue) {
+										// 呼び出しもとの画面や、選択されているテーブルに応じて更新処理を記述すれば、セルの変更がデータベースに反映される
+										// 今回はサンプルなのでactorテーブルのみ更新可能
+										switch('<%= head.name %>') {
+												case 'grid':
+														if($scope.table !== 'actor'){
+															rowEntity[colDef.field] = oldValue;
+															break;
+														}
+														for(var key in COLUMN_DEFS){
+																if(key === colDef.field){
+																		var col_type = COLUMN_DEFS[key].type;
+																}
+														}
+														var dt = getDate();
+														var new_val;
+														switch(col_type) {
+																case 'string':
+																case 'date':
+																		new_val = '\'' + newValue.trim() + '\'';
+																		break;
+																case 'number':
+																		new_val = newValue;
+																		break;
+														}
+														pg_query({
+																sql: 'UPDATE '
+																+   'actor '
+																+ 'SET '
+																+   colDef.field + ' = ' + new_val + ', last_update = \'' + dt + '\' '
+																+ 'WHERE '
+																+   'actor.actor_id=\'' + rowEntity.actor_id + '\' '
+														});
+														break;
+												default:
+														rowEntity[colDef.field] = oldValue;
+														break;
+										}
+								}
+						});
+				},
+				/* SheetJS Service setup */
+				filename: "SheetJSAngular",
+				sheetname: "ng-SheetJS",
+				gridMenuCustomItems: [
+						{
+								title: 'Export all data as XLSX',
+								action: function() { SheetJSExportService.exportXLSX(gridApi); },
+								order: 200
+						},
+						{
+								title: 'Export all data as XLSB',
+								action: function() { SheetJSExportService.exportXLSB(gridApi); },
+								order: 201
+						}
+				]
+			};
+
+			// state save or restore
+			$scope.state = {};
+			
+			$scope.saveState = function() {
+					$scope.state = gridApi.saveState.save();
+					localStorage && localStorage.setItem('uigrid-state-<%= head.name %>', JSON.stringify($scope.state));
+			};
+
+			$scope.restoreState = function() {
+					var state = localStorage.getItem('uigrid-state-<%= head.name %>');
+					if(state) {
+							$scope.state = JSON.parse(state);
+							gridApi.saveState.restore($scope, $scope.state);
+					}
+			};
+			
+			$scope.saveState1 = function() {
+					$scope.state = gridApi.saveState.save();
+					localStorage && localStorage.setItem('uigrid-state-<%= head.name %>1', JSON.stringify($scope.state));
+			};
+
+			$scope.restoreState1 = function() {
+					var state = localStorage.getItem('uigrid-state-<%= head.name %>1');
+					if(state) {
+							$scope.state = JSON.parse(state);
+							gridApi.saveState.restore($scope, $scope.state);
+					}
+			};
+			
+			$scope.saveState2 = function() {
+					$scope.state = gridApi.saveState.save();
+					localStorage && localStorage.setItem('uigrid-state-<%= head.name %>2', JSON.stringify($scope.state));
+			};
+
+			$scope.restoreState2 = function() {
+					var state = localStorage.getItem('uigrid-state-<%= head.name %>2');
+					if(state) {
+							$scope.state = JSON.parse(state);
+							gridApi.saveState.restore($scope, $scope.state);
+					}
+			};
+			
+			$scope.saveState3 = function() {
+					$scope.state = gridApi.saveState.save();
+					localStorage && localStorage.setItem('uigrid-state-<%= head.name %>3', JSON.stringify($scope.state));
+			};
+
+			$scope.restoreState3 = function() {
+					var state = localStorage.getItem('uigrid-state-<%= head.name %>3');
+					if(state) {
+							$scope.state = JSON.parse(state);
+							gridApi.saveState.restore($scope, $scope.state);
+					}
+			};
+			
+			$scope.resetState = function() {
+					if(uigrid_init_state) {
+							$scope.state = uigrid_init_state;
+							gridApi.saveState.restore($scope, $scope.state);
+					}
+			};
+
+			// update
+			$scope.update = function(data) {
+				var columnDefs, buf;
+				// data clear
+				$scope.myColumnDefs.length = 0;
+				$scope.myData.length = 0;
+				// refresh data
+				refresh();
+				$timeout(function() {
+					// columnDefs
+					for(buf in data[0]) {
+							columnDefs = COLUMN_DEFS[buf];
+							
+							columnDefs.filters = [{
+									condition: uiGridConstants.filter.CONTAINS,
+									placeholder: '含む'
+							}, {
+									condition: uiGridConstants.filter.NOT_EQUAL,
+									placeholder: '等しくない'
+							}, {
+									condition: uiGridConstants.filter.GREATER_THAN_OR_EQUAL,
+									placeholder: '以上'
+							}, {
+									condition: uiGridConstants.filter.LESS_THAN_OR_EQUAL,
+									placeholder: '以下'
+							}];
+							$scope.myColumnDefs.push(columnDefs);
+					}
+					// フィールド名に応じてフィルターを更新
+					for(var i = 0; i < $scope.myColumnDefs.length; i++){
+						switch($scope.myColumnDefs[i].type){
+							case 'date':
+								// フィルターオプションの配列削除 = []ではダメだった
+								while($scope.myColumnDefs[i].filters.length > 0){
+										$scope.myColumnDefs[i].filters.pop();        
+								}
+								$scope.myColumnDefs[i].filters[0] = {condition: checkContains};
+								$scope.myColumnDefs[i].filters[1] = {condition: checkStart};
+								$scope.myColumnDefs[i].filters[2] = {condition: checkEnd};
+								$scope.myColumnDefs[i].filterHeaderTemplate =
+										'<div ui-grid-filter>'
+										+   '<div class="ui-grid-filter-container ng-scope"><input style="display:inline; width:100%" class="ui-grid-filter-input ui-grid-filter-input-1" placeholder="含む" date-picker type="text" ng-model="col.filters[0].term" /></div>'
+										+   '<div class="ui-grid-filter-container ng-scope"><input style="display:inline; width:100%" class="ui-grid-filter-input ui-grid-filter-input-1" placeholder="から" date-picker type="text" ng-model="col.filters[1].term" /></div>'
+										+   '<div class="ui-grid-filter-container ng-scope"><input style="display:inline; width:100%" class="ui-grid-filter-input ui-grid-filter-input-1" placeholder="まで" date-picker type="text" ng-model="col.filters[2].term" /></div>'
+										+ '</div>';
+								break;
+						}
+					}
+							
+					// data
+					for(buf = 0; buf < data.length; buf++) {
+							$scope.myData.push(data[buf]);
+					}
+					// refresh data
+					refresh();
+					
+					console.log($scope);
+					if(uigrid_onece) {
+							uigrid_onece = false;
+							$timeout(function() {
+									uigrid_init_state = gridApi.saveState.save();
+									$scope.restoreState();
+							}, 0);
+					}
+						
+				}, 100);
+			};
+			
+			// グリッドフッターの切り替え
+			$scope.toggleFooter = function() {
+				$scope.gridOptions.showGridFooter = !$scope.gridOptions.showGridFooter;
+				$scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
+			};
+			
+			// カラムフッターの切り替え
+			$scope.toggleColumnFooter = function() {
+				$scope.gridOptions.showColumnFooter = !$scope.gridOptions.showColumnFooter;
+				$scope.gridApi.core.notifyDataChange(uiGridConstants.dataChange.OPTIONS);
+			};
+
+			// フィルタリングの切り替え
+			$scope.toggleColumnFiltering = function() {
+				for(var i = 0; i < $scope.myColumnDefs.length; i++){
+					switch($scope.myColumnDefs[i].type){
+						case 'number':
+							break;
+						case 'string': // ドロップダウンを追加
+							$scope.myColumnDefs[i].filters.length = 3;
+							var dataList = [];
+							for(var j = 0; j < $scope.myData.length; j++){
+								dataList.push($scope.myData[j][$scope.myColumnDefs[i].field]);
+							}
+							// 配列をソート
+							dataList.sort();
+							// Setで配列から重複を削除
+							dataList = new Set(dataList);
+							var col_options = [];
+							col_options.push({ value: '', label: '全て' });
+							// set内のデータをcol_optionsに設定
+							for(var value of dataList.values()){
+								var col_obj = {};// <- var col_obj = {};
+								col_obj.value = value;
+								col_obj.label = value;
+								col_options.push(col_obj);
+							}
+							$scope.myColumnDefs[i].filters[2] = {
+								term: '',
+								type: uiGridConstants.filter.SELECT,
+								condition: uiGridConstants.filter.EXACT,
+								selectOptions: col_options  
+							};
+							break;
+						case 'date':
+							break;
+					}
+				}
+				// refresh data
+				refresh();   
+			};
+ 
+			
+			function getRowId(row) {
+					return row.id;
+			}
+
+			function refresh() {
+				$scope.refresh = true;
+				$timeout(function() {
+						$scope.refresh = false;
+				}, 0);
+			};				
+
+		}])
+        .directive('datePicker', function(){
+			return {
+				restrict : "A",
+				require: 'ngModel',
+				link : function(scope, element, attrs, ngModel){
+					$(function(){
+						$(element).datepicker({
+							changeMonth: true,
+							changeYear: true,
+							closeText: 'Clear',
+							showButtonPanel: true,
+							onClose: function () {
+									var event = arguments.callee.caller.caller.arguments[0];
+									// If "Clear" gets clicked, then really clear it
+									if ($(event.delegateTarget).hasClass('ui-datepicker-close')) {
+											$(this).val('');
+											scope.$apply(function() {
+													ngModel.$setViewValue(null);
+											});
+									}
+							},
+							onSelect: function(date){
+									scope.$apply(function() {
+											ngModel.$setViewValue(date);
+									});
+							}
+						});
+					})
+				}
+			}
+        });
+
+	// YYYY-MM-DD hh:mm:ss取得
+	function getDate(){
+		var dt = new Date();
+		var result = moment(dt).format("YYYY-MM-DD HH:mm:ss");
+		return result;
+	}
+	
+	function checkContains(term, value, row, column) {
+		term = term.replace(/\\/g,"")
+		var now = moment(value);
+		if(term) {
+			if(!moment(term).isSame(now, 'day')) return false;
+		} 
+		return true;
+	}
+        
+	function checkStart(term, value, row, column) {
+		term = term.replace(/\\/g,"")
+		var now = moment(value);
+		if(term) {
+			if(moment(term).isAfter(now, 'day')) return false;
+		} 
+		return true;
+	}
+
+	function checkEnd(term, value, row, column) {
+		term = term.replace(/\\/g,"")
+		var now = moment(value);
+		if(term) {
+			if(moment(term).isBefore(now, 'day')) return false;
+		} 
+		return true;
+	}
+
+	/* pdfmake*/
+	pdfMake.fonts = {
+		GenShin: {
+			normal: 'GenShinGothic-Normal-Sub.ttf',
+			bold: 'GenShinGothic-Normal-Sub.ttf',
+			italics: 'GenShinGothic-Normal-Sub.ttf',
+			bolditalics: 'GenShinGothic-Normal-Sub.ttf',
+		},
+	};
+	/* Socket.IO */
+	var socket = io();
+	
+	/**
+	 * SQL クエリ
+	 * @param {Object} [data] name: result message name, sql: sql
+	 */
+	function pg_query(data) {
+		socket.emit('pg_query', data);
+	}
+	
+	
+	/**
+	 * SQL クエリ結果
+	 */
+	socket.on('pg_result', function(message) {
+		var data = JSON.parse(message);
+		angular.element('[ng-controller=UIGridCtrl]').scope().update(data);
+	});
+	
+	$(function() {
+		// 2日本語を有効化
+		$.datepicker.setDefaults($.datepicker.regional['ja']);
+	});        
+		
+	/**
+	 * 列名やデータ型からCOLUMN_DEFS 自動生成する
+	 */
+	socket.on('pg_column_result', function(message) {
+		var data = JSON.parse(message);
+		for ( var i = 0; i < data.length ; i++) {
+			switch(data[i].data_type){
+				case 'integer':
+				case 'smallint':
+				case 'numeric':
+				COLUMN_DEFS[data[i].column_name] = {
+						field: data[i].column_name,
+						name: data[i].column_name,
+						type: 'number',
+						width: 120,
+				}    
+				break;
+				case 'character varying':
+				case 'boolean':
+				case 'text':
+				case 'USER-DEFINED':
+				case 'ARRAY':
+				case 'tsvector':
+				case 'character':
+				case 'bytea':
+				COLUMN_DEFS[data[i].column_name] = {
+						field: data[i].column_name,
+						name: data[i].column_name,
+						type: 'string',
+						width: 180,
+				}    
+				break;
+				case 'interval':
+				COLUMN_DEFS[data[i].column_name] = {
+						field: data[i].column_name,
+						name: data[i].column_name,
+						type: 'string',
+						width: 120,
+				}    
+				break;
+				case 'date':
+				COLUMN_DEFS[data[i].column_name] = {
+						field: data[i].column_name,
+						name: data[i].column_name,
+						type: 'date',
+						cellFilter: 'date:\'yyyy/MM/dd\'',
+						width: 180,
+				}    
+				break;
+				case 'timestamp without time zone':
+				COLUMN_DEFS[data[i].column_name] = {
+						field: data[i].column_name,
+						name: data[i].column_name,
+						type: 'date',              
+						enableFiltering: true,
+						enableCellEdit: false,
+						cellFilter: 'date:\'yyyy-MM-dd HH:mm:ss\'',
+						width: 180,
+				}
+				break;
+			}
+		}	
+	});
+	
+</script>
